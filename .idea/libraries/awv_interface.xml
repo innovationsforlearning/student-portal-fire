@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="awv_interface">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/app/libs/awv_interface.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
