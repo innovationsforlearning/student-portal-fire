@@ -4,10 +4,12 @@ import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.speech.tts.TextToSpeech;
+import android.speech.tts.UtteranceProgressListener;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.webkit.JavascriptInterface;
 import android.webkit.WebView;
+import android.webkit.WebSettings;
 import android.webkit.WebChromeClient;
 
 import com.amazon.android.webkit.AmazonWebKitFactories;
@@ -15,10 +17,15 @@ import com.amazon.android.webkit.AmazonWebKitFactory;
 import com.amazon.android.webkit.AmazonWebView;
 import com.amazon.android.webkit.AmazonWebViewClient;
 
+import android.util.Log;
+
 
 public class MainActivity extends Activity implements TextToSpeech.OnInitListener {
 
-    private WebView mWebView;
+    private static final String TAG = "SP-TTS";
+    private static final String URL = "http://10.0.0.21:3000/?debug=true";
+
+    public WebView mWebView;
     private static boolean sFactoryInit = false;
     private AmazonWebKitFactory factory = null;
     private TextToSpeech tts = null;
@@ -54,48 +61,98 @@ public class MainActivity extends Activity implements TextToSpeech.OnInitListene
         mWebView.getSettings().setJavaScriptEnabled(true);
         mWebView.getSettings().setDomStorageEnabled(true);
 
+/*
+
+        // Set cache size to 8 mb by default. should be more than enough
+        mWebView.getSettings().setAppCacheMaxSize(1024*1024*8);
+
+        // This next one is crazy. It's the DEFAULT location for your app's cache
+        // But it didn't work for me without this line
+        mWebView.getSettings().setAppCachePath("/data/data/"+ getPackageName() +"/cache");
+        mWebView.getSettings().setAllowFileAccess(true);
+        mWebView.getSettings().setAppCacheEnabled(true);
+
+        mWebView.getSettings().setCacheMode(WebSettings.LOAD_DEFAULT);
+
+*/
+
         mWebView.setWebViewClient(new MyAppWebViewClient());
         // bridge interface java/javascript
-        mWebView.addJavascriptInterface(new SpeechSynthesis(this), "speechSynthesis");
-        mWebView.addJavascriptInterface(new SpeechSynthesisUtterance(this), "SpeechSynthesisUtterance");
+        mWebView.addJavascriptInterface(new SpeechSynthesis(this, mWebView), "android");
 
         // Use remote resource
-        mWebView.loadUrl("https://portal.sp-staging.tutormate.org");
+        mWebView.loadUrl(URL);
 
         // Stop local links and redirects from opening in browser instead of WebView
         mWebView.setWebViewClient(new MyAppWebViewClient());
 
-        mWebView.loadUrl("javascript:speechSynthesis.speak('hello');");
+//        mWebView.loadUrl("javascript:speechSynthesis.speak('hello');");
 
         // Use local resource
         // mWebView.loadUrl("file:///android_asset/www/index.html");
     }
 
-    final class SpeechSynthesisUtterance {
-        Context mContext;
-       /*My interface*/
-        /** Instantiate the interface and set the context */
-        SpeechSynthesisUtterance(Context c) {
-            mContext = c;
-        }
-
-    }
-
     final class SpeechSynthesis {
         Context mContext;
+        AmazonWebView mWebView;
        /*My interface*/
         /** Instantiate the interface and set the context */
-        SpeechSynthesis(Context c) {
+        SpeechSynthesis(Context c, AmazonWebView w) {
             mContext = c;
+            mWebView = w;
         }
-        public void speak(String inputText){
+
+        @JavascriptInterface
+        public void speak(String inputText, String onDone){
+
+            UtteranceProgressListener upl = null;
 /*
             tts.setLanguage(new Locale(setLang));
             Toast.makeText(getApplicationContext(), tts.toString(),
                     Toast.LENGTH_SHORT).show();
                     */
-            tts.speak(inputText, TextToSpeech.QUEUE_FLUSH, null);
+
+            if(onDone.equals("true")){
+
+                tts.setOnUtteranceProgressListener(new UtteranceProgressListener() {
+                    @Override
+                    public void onStart(String utteranceId) {
+                        // Speaking started.
+
+                    }
+
+                    @Override
+                    public void onDone(String utteranceId) {
+                        // Speaking stopped.
+
+                        mWebView.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                mWebView.loadUrl("javascript:(function () { " +
+                                        "doTTSCallback();" +
+                                        "})()");
+                            }
+                        });
+
+
+
+
+                        Log.d(TAG, "onDone:mWebView"+mWebView);
+
+                    }
+
+                    @Override
+                    public void onError(String utteranceId) {
+                        // Speaking stopped.
+
+                    }
+
+                });
+            };
+            tts.speak(inputText, TextToSpeech.QUEUE_FLUSH, null, inputText);
         }
+
+        @JavascriptInterface
         public void ttsStop(){
             if (tts != null) {
                 tts.stop();

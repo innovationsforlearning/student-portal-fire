@@ -18,12 +18,16 @@ public class MyAppWebViewClient extends AmazonWebViewClient {
 
     @Override
     public boolean shouldOverrideUrlLoading(AmazonWebView view, String url) {
+        /*
         if (Uri.parse(url).getHost().endsWith("tutormate.org")) {
             return false;
         }
 
         Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
         view.getContext().startActivity(intent);
-        return true;
+        return true;*/
+
+        return false;
+
     }
 }
