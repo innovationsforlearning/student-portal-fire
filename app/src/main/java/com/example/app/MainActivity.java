@@ -25,7 +25,7 @@ public class MainActivity extends Activity implements TextToSpeech.OnInitListene
     private static final String TAG = "SP-TTS";
     private static final String URL = "http://10.0.0.21:3000/?debug=true";
 
-    public WebView mWebView;
+    private WebView mWebView;
     private static boolean sFactoryInit = false;
     private AmazonWebKitFactory factory = null;
     private TextToSpeech tts = null;
@@ -61,7 +61,7 @@ public class MainActivity extends Activity implements TextToSpeech.OnInitListene
         mWebView.getSettings().setJavaScriptEnabled(true);
         mWebView.getSettings().setDomStorageEnabled(true);
 
-/*
+
 
         // Set cache size to 8 mb by default. should be more than enough
         mWebView.getSettings().setAppCacheMaxSize(1024*1024*8);
@@ -74,11 +74,11 @@ public class MainActivity extends Activity implements TextToSpeech.OnInitListene
 
         mWebView.getSettings().setCacheMode(WebSettings.LOAD_DEFAULT);
 
-*/
+
 
         mWebView.setWebViewClient(new MyAppWebViewClient());
         // bridge interface java/javascript
-        mWebView.addJavascriptInterface(new SpeechSynthesis(this, mWebView), "android");
+        mWebView.addJavascriptInterface(new SpeechSynthesis(this), "android");
 
         tts.setOnUtteranceProgressListener(new UtteranceProgressListener() {
             @Override
@@ -122,23 +122,19 @@ public class MainActivity extends Activity implements TextToSpeech.OnInitListene
 
     final class SpeechSynthesis {
         Context mContext;
-        AmazonWebView mWebView;
        /*My interface*/
         /** Instantiate the interface and set the context */
-        SpeechSynthesis(Context c, AmazonWebView w) {
+        SpeechSynthesis(Context c) {
             mContext = c;
-            mWebView = w;
         }
 
         @JavascriptInterface
         public void speak(String inputText){
-
-            UtteranceProgressListener upl = null;
-/*
+            /*
             tts.setLanguage(new Locale(setLang));
             Toast.makeText(getApplicationContext(), tts.toString(),
                     Toast.LENGTH_SHORT).show();
-                    */
+            */
 
             tts.speak(inputText, TextToSpeech.QUEUE_FLUSH, null, inputText);
         }
