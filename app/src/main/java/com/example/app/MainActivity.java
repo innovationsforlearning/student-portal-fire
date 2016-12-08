@@ -54,7 +54,7 @@ public class MainActivity extends Activity implements TextToSpeech.OnInitListene
             factory = AmazonWebKitFactories.getDefaultFactory();
         }
 
-        AmazonWebView mWebView;
+        final AmazonWebView mWebView;
 
         mWebView = (AmazonWebView) findViewById(R.id.activity_main_webview);
         factory.initializeWebView(mWebView, 0xFFFFFF, false, null);
@@ -80,6 +80,34 @@ public class MainActivity extends Activity implements TextToSpeech.OnInitListene
         // bridge interface java/javascript
         mWebView.addJavascriptInterface(new SpeechSynthesis(this, mWebView), "android");
 
+        tts.setOnUtteranceProgressListener(new UtteranceProgressListener() {
+            @Override
+            public void onStart(String utteranceId) {
+                // Speaking started.
+
+            }
+
+            @Override
+            public void onDone(String utteranceId) {
+                // Speaking stopped.
+
+                mWebView.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        mWebView.loadUrl("javascript:window.TTSCallback.onDone();");
+                    }
+                });
+            }
+
+            @Override
+            public void onError(String utteranceId) {
+                // Speaking stopped.
+
+            }
+
+        });
+
+
         // Use remote resource
         mWebView.loadUrl(URL);
 
@@ -103,7 +131,7 @@ public class MainActivity extends Activity implements TextToSpeech.OnInitListene
         }
 
         @JavascriptInterface
-        public void speak(String inputText, String onDone){
+        public void speak(String inputText){
 
             UtteranceProgressListener upl = null;
 /*
@@ -112,43 +140,6 @@ public class MainActivity extends Activity implements TextToSpeech.OnInitListene
                     Toast.LENGTH_SHORT).show();
                     */
 
-            if(onDone.equals("true")){
-
-                tts.setOnUtteranceProgressListener(new UtteranceProgressListener() {
-                    @Override
-                    public void onStart(String utteranceId) {
-                        // Speaking started.
-
-                    }
-
-                    @Override
-                    public void onDone(String utteranceId) {
-                        // Speaking stopped.
-
-                        mWebView.post(new Runnable() {
-                            @Override
-                            public void run() {
-                                mWebView.loadUrl("javascript:(function () { " +
-                                        "doTTSCallback();" +
-                                        "})()");
-                            }
-                        });
-
-
-
-
-                        Log.d(TAG, "onDone:mWebView"+mWebView);
-
-                    }
-
-                    @Override
-                    public void onError(String utteranceId) {
-                        // Speaking stopped.
-
-                    }
-
-                });
-            };
             tts.speak(inputText, TextToSpeech.QUEUE_FLUSH, null, inputText);
         }
 
