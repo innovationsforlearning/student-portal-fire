@@ -1,4 +1,4 @@
-package com.example.app;
+package org.innovationsforlearning.StudentPortal;
 
 import android.app.Activity;
 import android.content.Context;
@@ -23,7 +23,7 @@ import android.util.Log;
 public class MainActivity extends Activity implements TextToSpeech.OnInitListener {
 
     private static final String TAG = "SP-TTS";
-    private static final String URL = "http://10.0.0.21:3000/?debug=true";
+    private static final String URL = "http://10.0.0.21:3000";
 
     private WebView mWebView;
     private static boolean sFactoryInit = false;

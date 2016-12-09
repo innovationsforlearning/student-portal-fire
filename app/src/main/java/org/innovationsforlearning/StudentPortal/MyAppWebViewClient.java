@@ -1,4 +1,4 @@
-package com.example.app;
+package org.innovationsforlearning.StudentPortal;
 
 import android.content.Intent;
 import android.net.Uri;
