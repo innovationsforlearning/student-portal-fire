@@ -6,15 +6,13 @@ import android.os.Bundle;
 import android.speech.tts.TextToSpeech;
 import android.speech.tts.UtteranceProgressListener;
 
-import android.media.MediaPlayer;
-import android.media.MediaRecorder;
-
 import android.view.Menu;
 import android.view.MenuItem;
 import android.webkit.JavascriptInterface;
 import android.webkit.WebView;
 import android.webkit.WebSettings;
 import android.webkit.WebChromeClient;
+import android.content.pm.ActivityInfo;
 
 import com.amazon.android.webkit.AmazonWebKitFactories;
 import com.amazon.android.webkit.AmazonWebKitFactory;
@@ -46,6 +44,8 @@ public class MainActivity extends Activity implements TextToSpeech.OnInitListene
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
         setContentView(R.layout.activity_main);
 
         // Record to the external cache directory for visibility
