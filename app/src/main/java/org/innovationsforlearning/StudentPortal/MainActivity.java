@@ -178,13 +178,17 @@ public class MainActivity extends Activity implements TextToSpeech.OnInitListene
 
         @JavascriptInterface
         public void startRecording(String file){
+
             Log.e(TAG, "start recording:"+file);
+            audio.startRecording();
         }
 
         @JavascriptInterface
         public void stopRecording(){
 
             Log.e(TAG, "stop recording");
+            audio.stopRecording();
+            audio.startPlaying();
         }
 
         @JavascriptInterface

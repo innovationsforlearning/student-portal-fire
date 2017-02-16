@@ -3,6 +3,7 @@ package org.innovationsforlearning.StudentPortal;
 import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnCompletionListener;
 import android.media.MediaRecorder;
+import android.os.Environment;
 import android.util.Log;
 
 import java.io.IOException;
@@ -15,7 +16,7 @@ public class Audio {
 
     private static final String LOG_TAG = "SP_Audio";
 
-    private static String mFileName = null;
+    private static String mFileName = Environment.getExternalStorageDirectory().getAbsolutePath()+"/recording.3gp";
 
 
     private MediaRecorder mRecorder = null;
@@ -55,7 +56,7 @@ public class Audio {
         try {
             mRecorder.prepare();
         } catch (IOException e) {
-            Log.e(LOG_TAG, "prepare() failed");
+            Log.e(LOG_TAG, "prepare() failed"+e);
         }
 
         mRecorder.start();
