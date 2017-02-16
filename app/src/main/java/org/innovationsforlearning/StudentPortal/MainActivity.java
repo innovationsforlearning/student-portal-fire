@@ -5,6 +5,10 @@ import android.content.Context;
 import android.os.Bundle;
 import android.speech.tts.TextToSpeech;
 import android.speech.tts.UtteranceProgressListener;
+
+import android.media.MediaPlayer;
+import android.media.MediaRecorder;
+
 import android.view.Menu;
 import android.view.MenuItem;
 import android.webkit.JavascriptInterface;
@@ -22,22 +26,36 @@ import android.util.Log;
 
 public class MainActivity extends Activity implements TextToSpeech.OnInitListener {
 
-    private static final String TAG = "SP-TTS";
-    private static final String URL = "http://10.0.0.21:3000";
+    private static final String TAG = "SP-RnR";
+    // NOTE: setting URL to localhost causes a CORS error preventing story audio playback
+    // to hear story playback use staging or production
+//    private static final String URL = "https://portal.sp-staging.tutormate.org/";
+    private static final String URL = "http://10.0.0.21:3000/";
 
     private WebView mWebView;
     private static boolean sFactoryInit = false;
     private AmazonWebKitFactory factory = null;
     private TextToSpeech tts = null;
+    private Audio audio = null;
+    private static String mFileName = null;
+    private static boolean isSpeaking = false;
 
-    @SuppressWarnings("deprecation")
+
+//    @SuppressWarnings("deprecation")
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        // Record to the external cache directory for visibility
+        mFileName = getExternalCacheDir().getAbsolutePath();
+        mFileName += "/recording.aac";
+
         tts = new TextToSpeech(this, this);
+        audio = new Audio();
+
+
 
         if (!sFactoryInit) {
             factory = AmazonWebKitFactories.getDefaultFactory();
@@ -78,12 +96,13 @@ public class MainActivity extends Activity implements TextToSpeech.OnInitListene
 
         mWebView.setWebViewClient(new MyAppWebViewClient());
         // bridge interface java/javascript
-        mWebView.addJavascriptInterface(new SpeechSynthesis(this), "android");
+        mWebView.addJavascriptInterface(new WebViewBridge(this, mWebView), "android");
 
         tts.setOnUtteranceProgressListener(new UtteranceProgressListener() {
             @Override
             public void onStart(String utteranceId) {
                 // Speaking started.
+                isSpeaking = true;
 
             }
 
@@ -91,6 +110,7 @@ public class MainActivity extends Activity implements TextToSpeech.OnInitListene
             public void onDone(String utteranceId) {
                 // Speaking stopped.
 
+                isSpeaking = false;
                 mWebView.post(new Runnable() {
                     @Override
                     public void run() {
@@ -120,12 +140,15 @@ public class MainActivity extends Activity implements TextToSpeech.OnInitListene
         // mWebView.loadUrl("file:///android_asset/www/index.html");
     }
 
-    final class SpeechSynthesis {
+    final class WebViewBridge {
         Context mContext;
+        AmazonWebView mWebView;
+
        /*My interface*/
         /** Instantiate the interface and set the context */
-        SpeechSynthesis(Context c) {
+        WebViewBridge(Context c, AmazonWebView w) {
             mContext = c;
+            mWebView = w;
         }
 
         @JavascriptInterface
@@ -137,6 +160,7 @@ public class MainActivity extends Activity implements TextToSpeech.OnInitListene
             */
 
             tts.speak(inputText, TextToSpeech.QUEUE_FLUSH, null, inputText);
+            Log.e(TAG, "speak");
         }
 
         @JavascriptInterface
@@ -147,10 +171,41 @@ public class MainActivity extends Activity implements TextToSpeech.OnInitListene
             }
         }
 
+        @JavascriptInterface
+        public boolean isPlaying(){
+            return isSpeaking;
+        }
+
+        @JavascriptInterface
+        public void startRecording(String file){
+            Log.e(TAG, "start recording:"+file);
+        }
+
+        @JavascriptInterface
+        public void stopRecording(){
+
+            Log.e(TAG, "stop recording");
+        }
+
+        @JavascriptInterface
+        public void startPlayback(){
+            Log.e(TAG, "start playback");
+        }
+
+        @JavascriptInterface
+        public void stopPlayback(){
+            Log.e(TAG, "stop playback");
+        }
+
+        @JavascriptInterface
+        public String getBase64(){
+            Log.e(TAG, "getBase64");
+            return "base64";
+        }
+
     }
     public void onInit(int status) {
         // TODO Auto-generated method stub
-        return;
     }
 
     private TextToSpeech.OnInitListener ttsInitListener = new TextToSpeech.OnInitListener() {

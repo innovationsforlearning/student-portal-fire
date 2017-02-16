@@ -7,7 +7,7 @@
         jumboMode="true"
         optimize="true"
         revision="22.0.1"
-        sha1="361961dda2796bc74681e980c8a42c2a06cd96a5">
+        sha1="1787ac05f11763b419d70b24e37b8483cabbfa1a">
         <dex dex="/Users/johnfriedman/dev/student-portal-fire/app/build/intermediates/transforms/dex/debug/folders/1000/10/instant-run_a2a5fb12f83350257274e93f2225258e6b4bb6a7/classes.dex" />
     </item>
     <item
@@ -16,7 +16,7 @@
         jumboMode="true"
         optimize="true"
         revision="22.0.1"
-        sha1="d50f6308a27f9a29b7fc0a82272d88ead91e1952">
+        sha1="013eac385fb9aeae34cce646dbb4a75f948b6817">
         <dex dex="/Users/johnfriedman/dev/student-portal-fire/app/build/intermediates/transforms/dex/debug/folders/1000/10/instant-run-bootstrap_a8d89b2f0014fe65c49d69dd7f8bf8836e1081cd/classes.dex" />
     </item>
     <item

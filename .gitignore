@@ -88,3 +88,8 @@ Network Trash Folder
 Temporary Items
 .apdisk
 .gitignore
+.idea/markdown-exported-files.xml
+.idea/markdown-navigator.xml
+.idea/markdown-navigator/
+
+/keystore.properties
