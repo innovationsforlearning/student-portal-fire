@@ -21,6 +21,9 @@ import com.amazon.android.webkit.AmazonWebViewClient;
 
 import android.util.Log;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
+
 
 public class MainActivity extends Activity implements TextToSpeech.OnInitListener {
 
@@ -204,7 +207,16 @@ public class MainActivity extends Activity implements TextToSpeech.OnInitListene
         @JavascriptInterface
         public String getBase64(){
             Log.e(TAG, "getBase64");
-            return "base64";
+            String data = "";
+            try { data = audio.getBase64();}
+            catch (FileNotFoundException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            } catch (IOException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+            return data;
         }
 
     }
