@@ -13,33 +13,26 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
-/**
- * Created by johnfriedman on 2/2/17.
- */
 
 public class Audio {
 
     private static final String LOG_TAG = "SP_Audio";
+    private static final String FILE_NAME = "/recording.aac";
+    private static final String AUDIO_HEADER = "data:audio/aac;base64,";
 
-    private static String mFileName = Environment.getExternalStorageDirectory().getAbsolutePath()+"/recording.aac";
+    private static String mFileName = Environment.getExternalStorageDirectory().getAbsolutePath()+FILE_NAME;
 
 
     private MediaRecorder mRecorder = null;
     private MediaPlayer   mPlayer = null;
 
-    public void startPlaying() {
+    public void startPlaying(MediaPlayer.OnCompletionListener onCompletion) {
         mPlayer = new MediaPlayer();
-        mPlayer.setOnCompletionListener(new OnCompletionListener() {
-
-            @Override
-            public void onCompletion(MediaPlayer mp) {
-                Log.e(LOG_TAG, "playback complete");
-            }
-
-        });
+        mPlayer.setOnCompletionListener(onCompletion);
         try {
             mPlayer.setDataSource(mFileName);
             mPlayer.prepare();
+            Log.e(LOG_TAG, "startPlaying duration:"+mPlayer.getDuration());
             mPlayer.start();
         } catch (IOException e) {
             Log.e(LOG_TAG, "prepare() failed"+e);
@@ -54,9 +47,10 @@ public class Audio {
     public void startRecording() {
         mRecorder = new MediaRecorder();
         mRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
-        mRecorder.setOutputFormat(MediaRecorder.OutputFormat.AAC_ADTS);
+        mRecorder.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4);
         mRecorder.setOutputFile(mFileName);
         mRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AAC);
+        Log.e(LOG_TAG, "startRecording:");
 
         try {
             mRecorder.prepare();
@@ -68,6 +62,7 @@ public class Audio {
     }
 
     public void stopRecording() {
+        Log.e(LOG_TAG, "stopRecording:");
         mRecorder.stop();
         mRecorder.release();
         mRecorder = null;
@@ -95,7 +90,7 @@ public class Audio {
         byte[] bytes = loadFile();
         String encoded = Base64.encodeToString(bytes, Base64.DEFAULT);
 
-        return "data:audio/aac;base64,"+encoded;
+        return AUDIO_HEADER+encoded;
     }
 
 }

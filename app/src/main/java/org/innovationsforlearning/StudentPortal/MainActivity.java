@@ -2,6 +2,7 @@ package org.innovationsforlearning.StudentPortal;
 
 import android.app.Activity;
 import android.content.Context;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.speech.tts.TextToSpeech;
 import android.speech.tts.UtteranceProgressListener;
@@ -191,12 +192,20 @@ public class MainActivity extends Activity implements TextToSpeech.OnInitListene
 
             Log.e(TAG, "stop recording");
             audio.stopRecording();
-            audio.startPlaying();
         }
 
         @JavascriptInterface
         public void startPlayback(){
+
             Log.e(TAG, "start playback");
+            audio.startPlaying(new MediaPlayer.OnCompletionListener() {
+
+                @Override
+                public void onCompletion(MediaPlayer mp) {
+                    Log.e(TAG, "playback complete: emit END_PLAYBACK");
+                }
+
+            });
         }
 
         @JavascriptInterface

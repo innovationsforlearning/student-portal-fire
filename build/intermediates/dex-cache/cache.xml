@@ -7,8 +7,17 @@
         jumboMode="true"
         optimize="true"
         revision="22.0.1"
-        sha1="1787ac05f11763b419d70b24e37b8483cabbfa1a">
+        sha1="8162d7ccdae61115e3d2b821d0476ae3a8fb4941">
         <dex dex="/Users/johnfriedman/dev/student-portal-fire/app/build/intermediates/transforms/dex/debug/folders/1000/10/instant-run_a2a5fb12f83350257274e93f2225258e6b4bb6a7/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/Users/johnfriedman/dev/student-portal-fire/app/build/intermediates/incremental-classes/debug/instant-run-bootstrap.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="22.0.1"
+        sha1="05a9a10717e85dd57dd04df450810762a97d4897">
+        <dex dex="/Users/johnfriedman/dev/student-portal-fire/app/build/intermediates/transforms/dex/debug/folders/1000/10/instant-run-bootstrap_a8d89b2f0014fe65c49d69dd7f8bf8836e1081cd/classes.dex" />
     </item>
     <item
         is-multidex="true"
@@ -18,15 +27,6 @@
         revision="22.0.1"
         sha1="4ace2ea0a9fec7d031d9883c27b96dd1249e1582">
         <dex dex="/Users/johnfriedman/dev/student-portal-fire/app/build/intermediates/transforms/dex/debug/folders/1000/2/awv_android_factory_a26f4e90b31c413516cc5192f7dfe6b5e49b017e/classes.dex" />
-    </item>
-    <item
-        is-multidex="true"
-        jar="/Users/johnfriedman/dev/student-portal-fire/app/build/intermediates/incremental-classes/debug/instant-run-bootstrap.jar"
-        jumboMode="true"
-        optimize="true"
-        revision="22.0.1"
-        sha1="4f7146fa5d1f9fd111a16aaadc01879a42e42824">
-        <dex dex="/Users/johnfriedman/dev/student-portal-fire/app/build/intermediates/transforms/dex/debug/folders/1000/10/instant-run-bootstrap_a8d89b2f0014fe65c49d69dd7f8bf8836e1081cd/classes.dex" />
     </item>
     <item
         is-multidex="true"
