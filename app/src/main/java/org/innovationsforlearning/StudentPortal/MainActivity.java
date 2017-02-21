@@ -82,6 +82,7 @@ public class MainActivity extends Activity implements TextToSpeech.OnInitListene
         factory.initializeWebView(mWebView, 0xFFFFFF, false, null);
         mWebView.getSettings().setJavaScriptEnabled(true);
         mWebView.getSettings().setDomStorageEnabled(true);
+        mWebView.getSettings().setMediaPlaybackRequiresUserGesture(false);
 
 
 
