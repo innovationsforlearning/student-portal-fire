@@ -28,11 +28,11 @@ public class Audio {
 
     public void startPlaying(MediaPlayer.OnCompletionListener onCompletion) {
         mPlayer = new MediaPlayer();
+        mPlayer.setVolume((float)1.0,(float)1.0);
         mPlayer.setOnCompletionListener(onCompletion);
         try {
             mPlayer.setDataSource(mFileName);
             mPlayer.prepare();
-            Log.e(LOG_TAG, "startPlaying duration:"+mPlayer.getDuration());
             mPlayer.start();
         } catch (IOException e) {
             Log.e(LOG_TAG, "prepare() failed"+e);
@@ -45,6 +45,12 @@ public class Audio {
     }
 
     public void startRecording() {
+        File file = new File(mFileName);
+
+        if(file.exists()) {
+            file.delete();
+        }
+
         mRecorder = new MediaRecorder();
         mRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
         mRecorder.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4);
@@ -88,8 +94,8 @@ public class Audio {
 
     public String getBase64() throws IOException {
         byte[] bytes = loadFile();
-        String encoded = Base64.encodeToString(bytes, Base64.DEFAULT);
 
+        String encoded = Base64.encodeToString(bytes, Base64.DEFAULT);
         return AUDIO_HEADER+encoded;
     }
 

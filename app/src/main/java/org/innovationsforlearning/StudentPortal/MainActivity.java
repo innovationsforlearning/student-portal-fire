@@ -29,8 +29,6 @@ import java.io.IOException;
 public class MainActivity extends Activity implements TextToSpeech.OnInitListener {
 
     private static final String TAG = "SP-RnR";
-    // NOTE: setting URL to localhost causes a CORS error preventing story audio playback
-    // to hear story playback use staging or production
 //    private static final String URL = "https://portal.sp-staging.tutormate.org/";
     private static final String URL = "http://10.0.0.21:3000/";
 
@@ -60,7 +58,6 @@ public class MainActivity extends Activity implements TextToSpeech.OnInitListene
         audio = new Audio();
 
 
-
         if (!sFactoryInit) {
             factory = AmazonWebKitFactories.getDefaultFactory();
             if (factory.isRenderProcess(this)) {
@@ -85,18 +82,16 @@ public class MainActivity extends Activity implements TextToSpeech.OnInitListene
         mWebView.getSettings().setMediaPlaybackRequiresUserGesture(false);
 
 
-
         // Set cache size to 8 mb by default. should be more than enough
-        mWebView.getSettings().setAppCacheMaxSize(1024*1024*8);
+        mWebView.getSettings().setAppCacheMaxSize(1024 * 1024 * 8);
 
         // This next one is crazy. It's the DEFAULT location for your app's cache
         // But it didn't work for me without this line
-        mWebView.getSettings().setAppCachePath("/data/data/"+ getPackageName() +"/cache");
+        mWebView.getSettings().setAppCachePath("/data/data/" + getPackageName() + "/cache");
         mWebView.getSettings().setAllowFileAccess(true);
         mWebView.getSettings().setAppCacheEnabled(true);
 
         mWebView.getSettings().setCacheMode(WebSettings.LOAD_DEFAULT);
-
 
 
         mWebView.setWebViewClient(new MyAppWebViewClient());
@@ -150,14 +145,17 @@ public class MainActivity extends Activity implements TextToSpeech.OnInitListene
         AmazonWebView mWebView;
 
        /*My interface*/
-        /** Instantiate the interface and set the context */
+
+        /**
+         * Instantiate the interface and set the context
+         */
         WebViewBridge(Context c, AmazonWebView w) {
             mContext = c;
             mWebView = w;
         }
 
         @JavascriptInterface
-        public void speak(String inputText){
+        public void speak(String inputText) {
             /*
             tts.setLanguage(new Locale(setLang));
             Toast.makeText(getApplicationContext(), tts.toString(),
@@ -169,7 +167,7 @@ public class MainActivity extends Activity implements TextToSpeech.OnInitListene
         }
 
         @JavascriptInterface
-        public void ttsStop(){
+        public void ttsStop() {
             if (tts != null) {
                 tts.stop();
                 // tts.shutdown();
@@ -177,49 +175,59 @@ public class MainActivity extends Activity implements TextToSpeech.OnInitListene
         }
 
         @JavascriptInterface
-        public boolean isPlaying(){
+        public boolean isPlaying() {
             return isSpeaking;
         }
 
         @JavascriptInterface
-        public void startRecording(String file){
+        public void startRecording(String file) {
 
-            Log.e(TAG, "start recording:"+file);
+            Log.e(TAG, "start recording:" + file);
             audio.startRecording();
         }
 
         @JavascriptInterface
-        public void stopRecording(){
+        public void stopRecording() {
 
             Log.e(TAG, "stop recording");
             audio.stopRecording();
         }
 
         @JavascriptInterface
-        public void startPlayback(){
+        public void startPlayback() {
 
             Log.e(TAG, "start playback");
             audio.startPlaying(new MediaPlayer.OnCompletionListener() {
 
                 @Override
                 public void onCompletion(MediaPlayer mp) {
-                    Log.e(TAG, "playback complete: emit END_PLAYBACK");
+
+                    mWebView.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            Log.e(TAG, "playback complete");
+                            String script = "window.firePlayCallback();"+
+                                    "";
+                            mWebView.loadUrl("javascript:" + script);
+                        }
+                    });
                 }
 
             });
         }
 
         @JavascriptInterface
-        public void stopPlayback(){
+        public void stopPlayback() {
             Log.e(TAG, "stop playback");
         }
 
         @JavascriptInterface
-        public String getBase64(){
-            Log.e(TAG, "getBase64");
+        public String getBase64() {
             String data = "";
-            try { data = audio.getBase64();}
-            catch (FileNotFoundException e) {
+            try {
+                data = audio.getBase64();
+            Log.e(TAG, "getBase64 length:"+data.length());
+            } catch (FileNotFoundException e) {
                 // TODO Auto-generated catch block
                 e.printStackTrace();
             } catch (IOException e) {
@@ -230,6 +238,7 @@ public class MainActivity extends Activity implements TextToSpeech.OnInitListene
         }
 
     }
+
     public void onInit(int status) {
         // TODO Auto-generated method stub
     }
@@ -240,10 +249,11 @@ public class MainActivity extends Activity implements TextToSpeech.OnInitListene
             //Maybe let the user know hello!
         }
     };
+
     // Prevent the back-button from closing the app
     @Override
     public void onBackPressed() {
-        if(mWebView.canGoBack()) {
+        if (mWebView.canGoBack()) {
             mWebView.goBack();
         } else {
             super.onBackPressed();
