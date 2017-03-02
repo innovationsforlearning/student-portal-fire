@@ -29,7 +29,7 @@ import java.io.IOException;
 public class MainActivity extends Activity implements TextToSpeech.OnInitListener {
 
     private static final String TAG = "SP-RnR";
-    private static final String URL = "https://portal.sp-staging.tutormate.org/";
+    private static final String URL = "https://portal.sp.tutormate.org/";
 //    private static final String URL = "http://10.0.0.21:3000/";
 
     private WebView mWebView;
