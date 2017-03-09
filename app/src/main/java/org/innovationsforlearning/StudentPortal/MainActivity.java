@@ -25,12 +25,18 @@ import android.util.Log;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
+import static org.innovationsforlearning.StudentPortal.BuildConfig.FLAVOR;
+
 
 public class MainActivity extends Activity implements TextToSpeech.OnInitListener {
 
     private static final String TAG = "SP-RnR";
-    private static final String URL = "https://portal.sp.tutormate.org/";
-//    private static final String URL = "http://10.0.0.21:3000/";
+
+    private static final class URLS {
+        public static final String production = "https://portal.sp.tutormate.org/";
+        public static final String staging = "https://portal.sp-staging.tutormate.org/";
+        public static final String development = "http://10.0.0.21:3000/";
+    }
 
     private WebView mWebView;
     private static boolean sFactoryInit = false;
@@ -127,9 +133,18 @@ public class MainActivity extends Activity implements TextToSpeech.OnInitListene
 
         });
 
+        String url;
+        if (FLAVOR.equals("staging")) {
+            url = URLS.staging;
+        } else if (FLAVOR.equals("development")) {
+            url = URLS.development;
+        } else {
+            url = URLS.production;
+        }
 
+        Log.e(TAG, "url:"+url);
         // Use remote resource
-        mWebView.loadUrl(URL);
+        mWebView.loadUrl(url);
 
         // Stop local links and redirects from opening in browser instead of WebView
         mWebView.setWebViewClient(new MyAppWebViewClient());
@@ -206,7 +221,7 @@ public class MainActivity extends Activity implements TextToSpeech.OnInitListene
                         @Override
                         public void run() {
                             Log.e(TAG, "playback complete");
-                            String script = "window.firePlayCallback();"+
+                            String script = "window.firePlayCallback();" +
                                     "";
                             mWebView.loadUrl("javascript:" + script);
                         }
@@ -226,7 +241,7 @@ public class MainActivity extends Activity implements TextToSpeech.OnInitListene
             String data = "";
             try {
                 data = audio.getBase64();
-            Log.e(TAG, "getBase64 length:"+data.length());
+                Log.e(TAG, "getBase64 length:" + data.length());
             } catch (FileNotFoundException e) {
                 // TODO Auto-generated catch block
                 e.printStackTrace();

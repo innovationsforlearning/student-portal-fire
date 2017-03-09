@@ -2,22 +2,40 @@
 <items version="2" >
 
     <item
-        is-multidex="false"
+        is-multidex="true"
+        jar="/Users/johnfriedman/dev/student-portal-fire/app/build/intermediates/incremental-classes/staging/debug/instant-run-bootstrap.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="22.0.1"
+        sha1="bb11a333ddd2dbe087cc84303662da08fc4071c2">
+        <dex dex="/Users/johnfriedman/dev/student-portal-fire/app/build/intermediates/transforms/dex/staging/debug/folders/1000/10/instant-run-bootstrap_e93c6f71bf4c3fe59199deba79b0531a8781e370/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
         jar="/Users/johnfriedman/dev/student-portal-fire/app/libs/awv_android_factory.jar"
-        jumboMode="false"
+        jumboMode="true"
         optimize="true"
         revision="22.0.1"
         sha1="4ace2ea0a9fec7d031d9883c27b96dd1249e1582">
-        <dex dex="/Users/johnfriedman/dev/student-portal-fire/app/build/intermediates/pre-dexed/debug/awv_android_factory_a26f4e90b31c413516cc5192f7dfe6b5e49b017e.jar" />
+        <dex dex="/Users/johnfriedman/dev/student-portal-fire/app/build/intermediates/transforms/dex/staging/debug/folders/1000/2/awv_android_factory_a26f4e90b31c413516cc5192f7dfe6b5e49b017e/classes.dex" />
     </item>
     <item
-        is-multidex="false"
+        is-multidex="true"
         jar="/Users/johnfriedman/dev/student-portal-fire/app/libs/awv_interface.jar"
-        jumboMode="false"
+        jumboMode="true"
         optimize="true"
         revision="22.0.1"
         sha1="0e0a0643cd4dfd7160e9e93f1c8cc1e1c23f153b">
-        <dex dex="/Users/johnfriedman/dev/student-portal-fire/app/build/intermediates/pre-dexed/debug/awv_interface_f0c70d32dea6e366a37619d1b97c74d9f1a7a60c.jar" />
+        <dex dex="/Users/johnfriedman/dev/student-portal-fire/app/build/intermediates/transforms/dex/staging/debug/folders/1000/2/awv_interface_f0c70d32dea6e366a37619d1b97c74d9f1a7a60c/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/Users/johnfriedman/dev/student-portal-fire/app/build/intermediates/incremental-runtime-classes/staging/debug/instant-run.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="22.0.1"
+        sha1="f3072ecffaa25d703462d2b639fe389f62f2d955">
+        <dex dex="/Users/johnfriedman/dev/student-portal-fire/app/build/intermediates/transforms/dex/staging/debug/folders/1000/10/instant-run_8547defbead8afaedf10c46a585be02407f3c12a/classes.dex" />
     </item>
 
 </items>
